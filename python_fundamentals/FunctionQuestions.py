@@ -108,10 +108,42 @@ print("\nQ3b\n")
 
 # A3b:
 
-try:
-    is_prime(int(input()))
-except:
-    print('Unable to complete, please type a number instead')
+def is_primee(number: int):
+    try:
+        number = int(number)     
+        if number > 0:
+            for num in range(2, number):
+                if number % num == 0:
+                    return False
+            return True
+        return False
+    except:
+        print('Try Again')
+        is_primee(int(input()))
+
+is_primee(input())
+
+
+# input()
+# try:
+#     is_prime(int(input()))
+# except ValueError:
+#     print('Unable to complete, please type a number instead')
 
 # -------------------------------------------------------------------------------------- #
+# %%
+
+def isPrimeee(x):   
+    try: #try except method - good for error handling        
+        if x > 1:            
+            for i in range(2, x):                
+                if x % i == 0:                    
+                    return False            
+                return True        
+            return False    
+    except ValueError:        
+            print("Try again: ")
+            
+
+print(isPrimeee(input("Enter a number: ")))
 # %%
