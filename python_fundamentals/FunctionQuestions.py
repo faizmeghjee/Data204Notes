@@ -24,7 +24,7 @@ print("\nQ1b\n")
 
 # A1b:
 
-def factor(n1, n2):
+def factor(n1: int, n2: int):
     a = divisor(n2)
     b = divisor(n1)
 
@@ -93,7 +93,7 @@ print("\nQ3a\n")
 # A3a:
 
 def is_prime(number: int):
-    if number > 0:
+    if number >= 2:
         for num in range(2, number):
             if number % num == 0:
                 return False
@@ -111,7 +111,7 @@ print("\nQ3b\n")
 def is_primee(number: int):
     try:
         number = int(number)     
-        if number > 0:
+        if number >= 2:
             for num in range(2, number):
                 if number % num == 0:
                     return False
@@ -133,7 +133,7 @@ is_primee(input())
 # -------------------------------------------------------------------------------------- #
 # %%
 
-def isPrimeee(x):   
+def isPrimeee(x: int):   
     try: #try except method - good for error handling        
         if x > 1:            
             for i in range(2, x):                
