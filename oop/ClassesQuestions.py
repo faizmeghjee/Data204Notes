@@ -17,7 +17,7 @@ print("\nQ1b\n")
 
 # A1b:
 
-class city(Country):
+class City(Country):
 
     def __init__(self, continent, climate, language) -> None:
         super().__init__(continent, climate, language)
