@@ -30,5 +30,6 @@ print(bham_academy) # returns This is the latitude: 52.488 This is the longitude
 # This makes everything within the If statement only run if the file is run directly.
 if __name__ == '__main__':  # won't be run if the file is imported into another file.
     print('This is the python file: ' + __name__) # returns __main__ if ran directly from file.
+    print(type(bham_academy))
 
 # %%

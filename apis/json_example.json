@@ -1,0 +1,17 @@
+
+
+{
+    "exchange-rate": 12.07,
+    "age": 57,
+    "charge": -1.6e-19,
+    "firstName": "Neil",
+    "empty-string": "",
+    "isTrainer": true,
+    "phoneNumbers":["1234", "5678", "890"],
+    "address": {
+        "street": "123 High Street",
+        "city": "London",
+        "postcode": "AB12 3KL"
+    },
+    "car": null
+}
