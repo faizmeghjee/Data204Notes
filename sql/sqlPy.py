@@ -9,10 +9,11 @@ print(pyodbc.drivers())
 sql_server = 'faizm\LOCALDB#E21E3648'
 
 # Create a VARIABLE to store the connection string
-conx_string = "driver={SQL SERVER}; server=faizm\LOCALDB#E21E3648; database=Northwind; trusted_connection=YES;"
+# conx_string = "driver={ODBC Driver 17 for SQL SERVER}; server=faizm\LOCALDB#E21E3648; database=Northwind; trusted_connection=YES;"
+conx_string = "driver={SQL SERVER}; server=localhost; database=Northwind; trusted_connection=YES;"
 
 # Create a VARIABLE for the sql query
-query = 'SELECT * FROM Customers'
+query = 'SELECT TOP 10 CompanyName, ContactName, Address, City FROM Customers'
 
 print(0)
 
