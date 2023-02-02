@@ -352,6 +352,6 @@ MigrationBackup/
 # virtual enviroment
 venv/
 
-./DataWithPython/.vscode
+**/DataWithPython/.vscode
 
-./DataWithPython/venv
+**/DataWithPython/venv
