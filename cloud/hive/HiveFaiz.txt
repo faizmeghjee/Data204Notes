@@ -1,0 +1,58 @@
+CREATE DATABASE IF NOT EXISTS academy;
+
+DROP TABLE IF EXISTS academy.vgsales;
+
+CREATE TABLE IF NOT EXISTS academy.vgsales (
+rank INT,
+name STRING, 
+year INT,
+genre STRING,
+publisher STRING,
+na_sales INT,
+eu_sales INT,
+jp_sales INT,
+other_sales INT,
+global_sales INT)
+PARTITIONED BY (platform STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde';
+
+DROP TABLE IF EXISTS academy.temp;
+
+CREATE TABLE IF NOT EXISTS academy.temp (
+rank INT,
+name STRING, 
+platform STRING,
+year INT,
+genre STRING,
+publisher STRING,
+na_sales INT,
+eu_sales INT,
+jp_sales INT,
+other_sales INT,
+global_sales INT) 
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+TBLPROPERTIES('skip.header.line.count'='1');
+
+LOAD DATA INPATH '/user/hadoop/vgsales.csv'
+INTO TABLE academy.temp;
+
+SET hive.exec.dynamic.partition=true;
+
+SET hive.exec.dynamic.partition.mode=nonstrict;
+
+INSERT INTO TABLE academy.vgsales PARTITION (platform)
+SELECT 
+rank,
+name,
+year,
+genre,
+publisher,
+na_sales,
+eu_sales,
+jp_sales,
+other_sales,
+global_sales, 
+platform
+FROM academy.temp;
+
+SELECT * FROM academy.vgsales;

@@ -126,7 +126,7 @@ try:
         print('Please type a number greater than 100')
         user_num = int(input(''))
 except ValueError:
-    print('You have not enter a number')
+    print('You have not entered a number')
 
 
 # %%

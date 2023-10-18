@@ -1,0 +1,69 @@
+1. Output the full names of the Top 5 Salespeople
+
+sales_raw = LOAD 's3://data-eng-resources/big-data/adventureworks/salespeople.csv' USING CSVLoader AS (BusinessEntityID:int,TerritoryID:int,SalesQuota:int,Bonus:int,CommissionPct:float,SalesYTD:float,SalesLastYear:float,rowguid:chararray,ModifiedDate:datetime);
+people_raw = LOAD 's3://data-eng-resources/big-data/adventureworks/people.csv' USING CSVLoader AS (BusinessEntityID:int,PersonType:chararray,NameStyle:int,Title:chararray,FirstName:chararray,MiddleName:chararray,LastName:chararray,Suffix:chararray,EmailPromotion:int,AdditionalContactInfo:chararray,Demographics:chararray,rowguid:chararray,ModifiedDate:datetime);
+
+sales_be = FOREACH sales_raw GENERATE BusinessEntityID, SalesYTD;
+people_be = FOREACH people_raw GENERATE BusinessEntityID, FirstName, MiddleName, LastName;
+sp_join = JOIN sales_be BY BusinessEntityID, people_be BY BusinessEntityID;
+
+data1 = FOREACH sp_join GENERATE CONCAT( people_be::FirstName, ' ', people_be::MiddleName, ' ', people_be::LastName) AS name, sales_be::SalesYTD;
+order_data1 = ORDER data1 BY sales_be::SalesYTD DESC;
+limit_data1 = LIMIT order_data1 5;
+
+OUTPUT:
+(Linda C Mitchell,4251368.5)
+(Jae B Pak,4116871.2)
+(Michael G Blythe,3763178.2)
+(Jillian NULL Carson,3189418.2)
+(Ranjit R Varkey Chudukatil,3121616.2)
+
+2. Find the average salesperson's sales (year to date) per territory name. Also provide the count of salespeople per territory.
+
+terr_raw = LOAD 's3://data-eng-resources/big-data/adventureworks/territories.csv' USING CSVLoader AS (TerritoryID:int,Name:chararray,CountryRegionCode:chararray,Group:chararray,SalesYTD:int,SalesLastYear::int,CostYTD:int,CostLastYear:int,rowguid:chararray,ModifiedDate:datetime);
+st_join = JOIN sales_raw BY TerritoryID, terr_raw BY TerritoryID;
+st_group = GROUP st_join BY terr_raw::Name;
+avg_std = FOREACH st_group GENERATE st_join.terr_raw::Name, AVG(st_join.sales_raw::SalesYTD), COUNT(st_join.sales_raw::SalesYTD);
+
+OUTPUT:
+({(Canada),(Canada)},2029130.125,2)
+({(France)},3121616.25,1)
+({(Central)},3189418.25,1)
+({(Germany)},1827066.75,1)
+({(Australia)},1421810.875,1)
+({(Northeast)},3763178.25,1)
+({(Northwest),(Northwest),(Northwest)},1500717.4583333333,3)
+({(Southeast)},2315185.5,1)
+({(Southwest),(Southwest)},3354952.0,2)
+({(United Kingdom)},4116871.25,1)
+
+3. Output a file containing a list of all names of employees as initials and surname (e.g. "D. R. Harvey")
+
+employee_raw = LOAD 's3://data-eng-resources/big-data/adventureworks/employees.csv' USING CSVLoader AS (BusinessEntityID:int,NationalIDNumber:int,LoginID:chararray,OrganizationNode:chararray,OrganizationLevel:int,JobTitle:chararray,BirthDate:datetime,MaritalStatus:chararray,Gender:chararray,HireDate:datetime,SalariedFlag:int,VacationHours:int,SickLeaveHours:int,CurrentFlag:int,rowguid:chararray,ModifiedDate:datetime);
+em_p_join = JOIN people_raw BY BusinessEntityID, employee_raw BY BusinessEntityID;
+
+names = FOREACH em_p_join GENERATE CONCAT(SUBSTRING(FirstName, 0, 1), '. ', SUBSTRING(MiddleName, 0, 1), '. ', LastName) AS Initals;
+
+names_em = FILTER names BY PersonType=='EM'; - NOT NEEDED (DIDNT USE)
+names_final = FOREACH names_em GENERATE Initals; - NOT NEEDED (DIDNT USE)
+
+STORE names_final INTO 'csvoutput' USING PigStorage('\t', '-schema');
+
+OUTPUT:
+[hadoop@ip-172-30-1-247 ~]$ ls
+csvoutput  home  question3
+[hadoop@ip-172-30-1-247 ~]$ cd question3/
+[hadoop@ip-172-30-1-247 question3]$ ls
+part-r-00000  _SUCCESS
+[hadoop@ip-172-30-1-247 question3]$ cat part-r-00000
+K. J. Sánchez
+T. L. Duffy
+R. N. Tamburello
+R. N. Walters
+G. A. Erickson
+J. H. Goldberg
+D. A. Miller
+D. L. Margheim
+G. N. Matthew
+M. N. Raheem
+etc...

@@ -1,0 +1,8 @@
+mapreduce
+hive
+hdfs
+pig
+yarn
+
+external table= leave files in hdfs
+internal table= takes ownership of file (moves the file)
